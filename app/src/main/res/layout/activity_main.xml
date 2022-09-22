@@ -30,7 +30,7 @@
         app:srcCompat="@drawable/brno" />
 
     <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/barChart"
+        android:id="@+id/idBarChart"
         android:layout_width="376dp"
         android:layout_height="459dp"
         app:layout_constraintBottom_toTopOf="@+id/buttonFetch"
