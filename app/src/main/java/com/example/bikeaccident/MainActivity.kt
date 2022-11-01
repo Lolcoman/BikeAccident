@@ -9,6 +9,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.bikeaccident.Models.DataResponse
 import com.example.bikeaccident.Models.Feature
+import com.example.bikeaccident.databinding.ActivityMainBinding
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
@@ -33,13 +34,18 @@ class MainActivity : AppCompatActivity() {
     lateinit var barChart: BarChart
     lateinit var lineDataSet: BarDataSet
     lateinit var barData: BarData
-
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val btn = findViewById<Button>(R.id.buttonFetch)
-        barChart = findViewById(R.id.idBarChart)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        //setContentView(R.layout.activity_main)
+        setContentView(view)
+        //val btn = findViewById<Button>(R.id.buttonFetch)
+        val btn = binding.buttonFetch
+        //barChart = findViewById(R.id.idBarChart)
+        barChart = binding.idBarChart
         downloadTask()
         btn.setOnClickListener {
             barChart.fitScreen()
