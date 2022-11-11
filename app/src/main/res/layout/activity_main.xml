@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/LinearFragment_Container"
     tools:context=".MainActivity">
 
     <TextView
@@ -30,6 +31,16 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/brno" />
 
+    <FrameLayout
+        android:id="@+id/containerForFirstFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="3dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonFetch"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView">
+    </FrameLayout>
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/idBarChart"
         android:layout_width="376dp"
@@ -38,7 +49,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
-
     <Button
         android:id="@+id/buttonFetch"
         android:layout_width="wrap_content"

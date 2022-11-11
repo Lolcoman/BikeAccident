@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -48,7 +49,19 @@ class MainActivity : AppCompatActivity() {
         barChart = binding.idBarChart
         downloadTask()
         btn.setOnClickListener {
-            barChart.fitScreen()
+            //barChart.fitScreen()
+            //val fragment = InfoFragment()
+            val infoFragment = InfoFragment()
+            val bundle = Bundle()
+            bundle.putInt("year",12)
+            val fragment : Fragment? =
+            supportFragmentManager.findFragmentByTag(InfoFragment::class.java.simpleName)
+            infoFragment.arguments = bundle
+            if (fragment !is InfoFragment){
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.containerForFirstFragment, infoFragment,InfoFragment::class.java.simpleName)
+                    .commit()
+            }
         }
 
     }
