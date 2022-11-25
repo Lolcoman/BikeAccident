@@ -2,7 +2,6 @@ package com.example.bikeaccident
 
 import android.graphics.Color
 import android.os.Bundle
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.android.volley.Request
@@ -36,7 +35,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var lineDataSet: BarDataSet
     lateinit var barData: BarData
     private lateinit var binding: ActivityMainBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -60,6 +58,7 @@ class MainActivity : AppCompatActivity() {
             if (fragment !is InfoFragment){
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.containerForFirstFragment, infoFragment,InfoFragment::class.java.simpleName)
+                    .addToBackStack(null)
                     .commit()
             }
         }
@@ -110,6 +109,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun downloadTask() {
+
+        var mPrefs = getPreferences(MODE_PRIVATE)
         val queue = Volley.newRequestQueue(this)
         val request = StringRequest(Request.Method.GET, url,
             { response ->
@@ -119,6 +120,50 @@ class MainActivity : AppCompatActivity() {
                 val apiData = Gson().fromJson(response, DataResponse::class.java)
                 val features = apiData.features
                 getYearGraph(features)
+
+                val prefsEditor = mPrefs.edit()
+                val gson = Gson()
+                val json = gson.toJson(apiData)
+                prefsEditor.putString("MyObject", json)
+                prefsEditor.apply()
+
+                //JEN TEST ZDA JE DOBŘE ULOŽENO!
+                val gsonn = Gson()
+                val jsonn = mPrefs.getString("MyObject", "")
+                val test = gsonn.fromJson(jsonn, DataResponse::class.java)
+                println(test.features)
+                /*
+                for(item in features)
+                {
+                    if (item.properties.rok == 2010)
+                    println(item.properties.rok)
+                }
+                val featureList = features.filter {
+                   it.properties.rok == 2014
+                }
+                 */
+                //features.forEach()
+                //println(features)
+                //featureList.forEach { println(it) }
+                //val jsonObject = JSONTokener(response).nextValue() as JSONObject
+                //val id = jsonObject.getJSONObject("crs")
+                //val ie = jsonObject.getJSONArray("features").getJSONObject(0).getJSONObject("properties").getString("rok")
+                //Log.i("ROK: ", id)
+                //println(ie)
+            },
+            { })
+        queue.add(request)
+    }
+    fun APIdownload() {
+        val queue = Volley.newRequestQueue(this)
+        val request = StringRequest(Request.Method.GET, url,
+            { response ->
+                //val data = response.toString()
+                //var jArray = JSONArray(data)
+                //val apiData = Gson().fromJson(response, DataResponse::class.java)
+                val apiData = Gson().fromJson(response, DataResponse::class.java)
+                val features = apiData.features
+                //getYearGraph(features)
 
                 /*
                 for(item in features)

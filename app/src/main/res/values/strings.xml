@@ -3,4 +3,50 @@
     <string name="cyklisticke_nehody">Cyklistické nehody</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="zraneni">zranění</string>
+    <string name="helma">helma</string>
+    <string name="zranění">zranění</string>
+    <string name="déšť">déšť</string>
+    <string name="účelová_komunikace">účelová komunikace</string>
+
+    <string-array name="pricina">
+        <item>jízda po nesprávné straně vozovky, vjetí do protisměru</item>
+        <item>řidič se plně nevěnoval řízení vozidla</item>
+        <item>proti příkazu dopravní značky DEJ PŘEDNOST</item>
+        <item>vozidlu přijíždějícímu zprava</item>
+        <item>při odbočování vlevo</item>
+        <item>proti příkazu dopravní značky STŮJ DEJ PŘEDNOST</item>
+        <item>nezaviněná řidičem</item>
+        <item>nezvládnutí řízení vozidla</item>
+        <item>jiný druh nesprávného způsobu jízdy</item>
+        <item>při přejíždění z jednoho jízdního pruhu do druhého</item>
+        <item>při zařazování do proudu jedoucích vozidel ze stanice, místa zastavení nebo stání</item>
+        <item>nesprávné otáčení nebo couvání</item>
+        <item>nepřizpůsobení rychlosti dopravně technickému stavu vozovky (zatáčka, klesání, stoupání, šířka vozovky apod.)</item>
+        <item>jiný druh nepřiměřené rychlosti</item>
+        <item>nepřizpůsobení rychlosti stavu vozovky (náledí, výtluky, bláto, mokrý povrch apod.)</item>
+        <item>při předjíždění došlo k ohrožení předjížděného řidiče vozidla (vynucované zařazení, předjížděný řidič musel prudce brzdit, měnit směr jízdy apod.)</item>
+        <item>chodci na vyznačeném přechodu</item>
+        <item>jiná technická závada (vztahuje se i na přípojná vozidla)</item>
+        <item>při vjíždění na silnici</item>
+        <item>jízda na "červenou" 3-barevného semaforu</item>
+        <item>při otáčení nebo couvání</item>
+        <item>nedodržení bezpečné vzdálenosti za vozidlem</item>
+        <item>bezohledná, agresivní, neohleduplná jízda</item>
+        <item>nepřizpůsobení rychlosti vlastnostem vozidla a nákladu</item>
+        <item>nehoda při provádění služebního zákroku (pronásledování pachatele atd.)</item>
+        <item>jiné nedání přednosti</item>
+        <item>překročení rychlosti stanovené dopravní značkou</item>
+        <item>vyhýbání bez dostatečného bočního odstupu (vůle)</item>
+        <item>jiný druh nesprávného předjíždění</item>
+        <item>chyby při udání směru jízdy</item>
+        <item>nepřizpůsobení rychlosti intenzitě (hustotě) provozu</item>
+        <item>předjíždění vlevo vozidla odbočujícího vlevo</item>
+        <item>jízda (vjetí) jednosměrnou ulicí, silnicí (v protisměru)</item>
+        <item>upadnutí, ztráta kola vozidla (i rezervního)</item>
+        <item>při odbočování vlevo souběžně jedoucímu vozidlu</item>
+        <item>předjíždění bez dostatečného bočního odstupu</item>
+        <item>protijedoucímu vozidlu při objíždění překážky</item>
+        <item>tramvaji, která odbočuje</item>
+    </string-array>
 </resources>

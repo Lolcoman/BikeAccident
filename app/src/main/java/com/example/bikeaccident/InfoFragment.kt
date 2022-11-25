@@ -1,11 +1,22 @@
 package com.example.bikeaccident
 
+import android.R
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.RadioButton
 import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import com.example.bikeaccident.Models.DataResponse
+import com.example.bikeaccident.databinding.FragmentInfoBinding
+import com.google.gson.Gson
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -22,6 +33,8 @@ class InfoFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var binding: FragmentInfoBinding
+    lateinit var languagesList: ArrayList<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,15 +46,56 @@ class InfoFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        val mPrefs : SharedPreferences?= activity?.getPreferences(Context.MODE_PRIVATE);
+        binding = FragmentInfoBinding.inflate(layoutInflater)
+        val view = binding.root
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_info,container,false)
-        text = view.findViewById(R.id.textView1)
-        val data = arguments
-        text.text = data!!.get("year").toString()
-        //return inflater.inflate(R.layout.fragment_info, container, false)
+        //val view = inflater.inflate(R.layout.fragment_info,container,false)
+        //text = view.findViewById(R.id.textView1)
+        //val data = arguments
+        val gsonn = Gson()
+        val jsonn = mPrefs?.getString("MyObject", "")
+        val test = gsonn.fromJson(jsonn, DataResponse::class.java)
+        val spn = binding.spinner
+        //Surový list
+        val list: ArrayList<String> = ArrayList()
+        //Převedený líst
+        val decodeList: ArrayList<String> = ArrayList()
+        for (i in 0 until test.features.size ){
+            list.add(test.features[i].properties.pricina)
+        }
+        //Nastavení správného kódování do českého jazyka
+        for (i in 0 until list.size ){
+            decodeList.add(String( list[i].toByteArray(charset("ISO-8859-1")), charset("UTF-8")))
+        }
+        val arrayAdapter: ArrayAdapter<String> = ArrayAdapter<String>(
+            requireActivity().baseContext,
+            R.layout.simple_spinner_dropdown_item,
+            decodeList.distinct()
+        )
+        //println(decodeList[0])
+        spn.adapter = arrayAdapter
+        //ar rok = binding.editTextYear.text.toString().toInt()
+
+        var alkohol = binding.alkoholGroup
+
+        // get selected radio button from radioGroup
+        //val selectedId: Int = alkohol.checkedRadioButtonId
+        var spinner = binding.spinner
+        var helma = binding.helma
+        var pocasi = binding.pocasi
+        var zraneni = binding.zraneni
+        var komunikace = binding.komunikace
+
+        binding.searchButton.setOnClickListener {
+            //searchAccident(rok,spinner.selectedItem.toString())
+        }
         return  view
     }
+private fun searchAccident(rok: Int,alkohol: String,spinner: String, jine: String)
+{
 
+}
     companion object {
         /**
          * Use this factory method to create a new instance of
