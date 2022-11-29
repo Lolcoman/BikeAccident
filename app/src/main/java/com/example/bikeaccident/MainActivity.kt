@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
             val featureList = apiData.filter {
                 it.properties.rok == i
             }
-            println("Rok: " + i + " Počet nehod: " + featureList.size)
+            //println("Rok: " + i + " Počet nehod: " + featureList.size)
             barList.add(BarEntry(featureList.size.toFloat(), counter))
             averageAccident.add(featureList.size)
             year.add(i.toString())

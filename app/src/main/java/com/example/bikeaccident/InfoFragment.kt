@@ -4,7 +4,6 @@ import android.R
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +13,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.bikeaccident.Models.DataResponse
+import com.example.bikeaccident.Models.Feature
 import com.example.bikeaccident.databinding.FragmentInfoBinding
 import com.google.gson.Gson
+import java.nio.charset.StandardCharsets
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -34,7 +35,7 @@ class InfoFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     private lateinit var binding: FragmentInfoBinding
-    lateinit var languagesList: ArrayList<String>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,14 +56,14 @@ class InfoFragment : Fragment() {
         //val data = arguments
         val gsonn = Gson()
         val jsonn = mPrefs?.getString("MyObject", "")
-        val test = gsonn.fromJson(jsonn, DataResponse::class.java)
+        val sharedData = gsonn.fromJson(jsonn, DataResponse::class.java)
         val spn = binding.spinner
         //Surový list
         val list: ArrayList<String> = ArrayList()
         //Převedený líst
         val decodeList: ArrayList<String> = ArrayList()
-        for (i in 0 until test.features.size ){
-            list.add(test.features[i].properties.pricina)
+        for (i in 0 until sharedData.features.size ){
+            list.add(sharedData.features[i].properties.pricina)
         }
         //Nastavení správného kódování do českého jazyka
         for (i in 0 until list.size ){
@@ -77,24 +78,81 @@ class InfoFragment : Fragment() {
         spn.adapter = arrayAdapter
         //ar rok = binding.editTextYear.text.toString().toInt()
 
-        var alkohol = binding.alkoholGroup
-
-        // get selected radio button from radioGroup
-        //val selectedId: Int = alkohol.checkedRadioButtonId
-        var spinner = binding.spinner
-        var helma = binding.helma
-        var pocasi = binding.pocasi
-        var zraneni = binding.zraneni
-        var komunikace = binding.komunikace
 
         binding.searchButton.setOnClickListener {
-            //searchAccident(rok,spinner.selectedItem.toString())
+            var rokText = binding.editTextYear
+            //var rok = binding.editTextYear.text.toString().toInt()
+            //var rok = rokText.text.toString().toInt()
+            var rok: Int
+            if(rokText.text.toString() == "" || rokText.text.toString().toInt() < 2010 || rokText.text.toString().toInt() > 2021)
+            {
+                rokText.error = "Zadejte rok 2010-2021";
+                //Toast.makeText(activity?.applicationContext, "Zadejte rok!", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }else{
+                rok = rokText.text.toString().toInt()
+            }
+            //get selected radio button from radioGroup
+            //val selectedId: Int = alkohol.checkedRadioButtonId
+            var groupAlkohol = binding.alkoholGroup
+            var alkoholSelected = groupAlkohol.checkedRadioButtonId
+            var alkohol = view.findViewById(alkoholSelected) as RadioButton
+            alkohol.text
+            val alc = alkohol.text.toString()
+            var spinner = binding.spinner
+            //spinner.setSelection(0, false);
+
+            var helma = binding.helma.isChecked
+            var pocasi = binding.pocasi.isChecked
+            var zraneni = binding.zraneni.isChecked
+            var viditelnost = binding.viditelnost.isChecked
+
+            searchAccident(rok,alc,spinner.selectedItem.toString(),helma, pocasi,zraneni,viditelnost,sharedData)
         }
         return  view
     }
-private fun searchAccident(rok: Int,alkohol: String,spinner: String, jine: String)
+private fun searchAccident(rok: Int,alkohol: String,spinner: String,helma: Boolean, pocasi: Boolean, zraneni: Boolean,viditelnost: Boolean,sharedData: DataResponse)
 {
+    var featury = sharedData.features
+    var prilba = "bez"
+    var nasledek = "nehoda pouze s hmotnou škodou"
+    var povetrnostniPodminky = "neztížené"
+    var noc = "ve dne"
+    var encodedSpinner = spinner.toByteArray()
+    var asciiEncodedString = String(encodedSpinner, StandardCharsets.ISO_8859_1)
+    if (helma)
+    {
+        prilba = "s"
+    }
+    if (zraneni)
+    {
+        nasledek = "nehoda s následky na životě"
+    }
+    if (pocasi)
+    {
+        povetrnostniPodminky = "déšť"
+    }
+    if (viditelnost){
+        noc = "v noci"
+    }
 
+    val featureList = featury.filter {
+        try{
+            it.properties.rok == null //&&
+//                    it.properties.alkohol.startsWith(alkohol) &&
+//                    it.properties.pricina == asciiEncodedString &&
+//                    it.properties.ozn_osoba.startsWith(prilba) &&
+//                    it.properties.nasledek.startsWith(nasledek) &&
+//                    it.properties.povetrnostni_podm.contains(povetrnostniPodminky) &&
+//                    it.properties.viditelnost.startsWith(noc)
+        }
+        catch (e: Exception){
+            Toast.makeText(activity?.applicationContext, "Žádný záznam", Toast.LENGTH_SHORT).show()
+            return
+        }
+    }
+    Toast.makeText(activity?.applicationContext, "Počet záznamů:" + featureList.size.toString(), Toast.LENGTH_SHORT).show()
+    println(featureList.size)
 }
     companion object {
         /**

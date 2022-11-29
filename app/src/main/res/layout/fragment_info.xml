@@ -17,14 +17,17 @@
             android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Rok" />
+            android:text="Rok"
+            app:errorEnabled="true"
+            android:hint="Zadejte rok"/>
 
         <EditText
             android:id="@+id/editTextYear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="number" />
+            android:inputType="number"
+            android:text="2010"/>
 
         <TextView
             android:id="@+id/textView5"
@@ -36,7 +39,8 @@
             android:id="@+id/alkoholGroup"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:checkedButton="@+id/alkoholAno">
 
             <RadioButton
                 android:id="@+id/alkoholAno"
@@ -56,8 +60,14 @@
                 android:id="@+id/alkoholNezjistovan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
+                android:layout_weight="1"
                 android:text="Nezjišťován" />
+            <RadioButton
+                android:id="@+id/drogy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="Pod vlivem drog" />
 
         </RadioGroup>
 
@@ -91,7 +101,7 @@
                     android:layout_height="wrap_content"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:text="@string/helma" />
+                    android:text="s přilbou" />
 
                 <CheckBox
                     android:id="@+id/zraneni"
@@ -112,14 +122,14 @@
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="@string/déšť" />
+                android:text="déšť" />
 
             <CheckBox
-                android:id="@+id/komunikace"
+                android:id="@+id/viditelnost"
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="@string/účelová_komunikace" />
+                android:text="noc" />
             </TableRow>
 
         </TableLayout>
