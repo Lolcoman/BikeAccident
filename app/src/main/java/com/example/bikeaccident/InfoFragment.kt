@@ -57,7 +57,7 @@ class InfoFragment : Fragment() {
         val gsonn = Gson()
         val jsonn = mPrefs?.getString("MyObject", "")
         val sharedData = gsonn.fromJson(jsonn, DataResponse::class.java)
-        val spn = binding.spinner
+        //val spn = binding.spinner
         //Surový list
         val list: ArrayList<String> = ArrayList()
         //Převedený líst
@@ -75,7 +75,7 @@ class InfoFragment : Fragment() {
             decodeList.distinct()
         )
         //println(decodeList[0])
-        spn.adapter = arrayAdapter
+        //spn.adapter = arrayAdapter
         //ar rok = binding.editTextYear.text.toString().toInt()
 
 
@@ -99,47 +99,17 @@ class InfoFragment : Fragment() {
             var alkohol = view.findViewById(alkoholSelected) as RadioButton
             alkohol.text
             val alc = alkohol.text.toString()
-            var spinner = binding.spinner
-            //spinner.setSelection(0, false);
 
-            var helma = binding.helma.isChecked
-            var pocasi = binding.pocasi.isChecked
-            var zraneni = binding.zraneni.isChecked
-            var viditelnost = binding.viditelnost.isChecked
-
-            searchAccident(rok,alc,spinner.selectedItem.toString(),helma, pocasi,zraneni,viditelnost,sharedData)
+            searchAccident(rok,alc,sharedData)
         }
         return  view
     }
-private fun searchAccident(rok: Int,alkohol: String,spinner: String,helma: Boolean, pocasi: Boolean, zraneni: Boolean,viditelnost: Boolean,sharedData: DataResponse)
+private fun searchAccident(rok: Int,alkohol: String,sharedData: DataResponse)
 {
     var featury = sharedData.features
-    var prilba = "bez"
-    var nasledek = "nehoda pouze s hmotnou škodou"
-    var povetrnostniPodminky = "neztížené"
-    var noc = "ve dne"
-    var encodedSpinner = spinner.toByteArray()
-    var asciiEncodedString = String(encodedSpinner, StandardCharsets.ISO_8859_1)
-    if (helma)
-    {
-        prilba = "s"
-    }
-    if (zraneni)
-    {
-        nasledek = "nehoda s následky na životě"
-    }
-    if (pocasi)
-    {
-        povetrnostniPodminky = "déšť"
-    }
-    if (viditelnost){
-        noc = "v noci"
-    }
-
     val featureList = featury.filter {
         try{
-            it.properties.rok == null //&&
-//                    it.properties.alkohol.startsWith(alkohol) &&
+            it.properties.rok == rok && it.properties.alkohol.startsWith(alkohol) //&&
 //                    it.properties.pricina == asciiEncodedString &&
 //                    it.properties.ozn_osoba.startsWith(prilba) &&
 //                    it.properties.nasledek.startsWith(nasledek) &&

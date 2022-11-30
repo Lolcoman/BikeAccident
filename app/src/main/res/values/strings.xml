@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BikeAccident</string>
+    <string name="app_name">Cyklo Brno</string>
     <string name="cyklisticke_nehody">Cyklistické nehody</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="zraneni">zranění</string>
@@ -7,4 +7,5 @@
     <string name="zranění">zranění</string>
     <string name="déšť">déšť</string>
     <string name="noc">noc</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>
