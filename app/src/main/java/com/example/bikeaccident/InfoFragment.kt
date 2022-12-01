@@ -9,41 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.bikeaccident.Models.DataResponse
-import com.example.bikeaccident.Models.Feature
 import com.example.bikeaccident.databinding.FragmentInfoBinding
 import com.google.gson.Gson
-import java.nio.charset.StandardCharsets
 
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [InfoFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class InfoFragment : Fragment() {
-    private lateinit var text : TextView
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
     private lateinit var binding: FragmentInfoBinding
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -78,6 +51,7 @@ class InfoFragment : Fragment() {
         //spn.adapter = arrayAdapter
         //ar rok = binding.editTextYear.text.toString().toInt()
 
+        //view.visibility = View.GONE;
 
         binding.searchButton.setOnClickListener {
             var rokText = binding.editTextYear
@@ -102,44 +76,51 @@ class InfoFragment : Fragment() {
 
             searchAccident(rok,alc,sharedData)
         }
+
+        binding.mapShow.setOnClickListener {
+            /*val myLatitude = 49.171130437000045
+            val myLongitude = 16.520742066000025
+            val gmmIntentUri =
+                Uri.parse("https://www.google.com/maps/dir/?api=1&origin= 49.171130437000045,16.520742066000025&destination=49.26102991,16.57131051&waypoints=49.22375737,16.62980964&travelmode=driving")
+            val intent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+            intent.setPackage("com.google.android.apps.maps")
+            try {
+                startActivity(intent)
+            } catch (ex: ActivityNotFoundException) {
+                try {
+                    val unrestrictedIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                    startActivity(unrestrictedIntent)
+                } catch (innerEx: ActivityNotFoundException) {
+                    Toast.makeText(activity?.applicationContext, "Prosím nainstalujte si Mapy Google", Toast.LENGTH_LONG)
+                        .show()
+                }
+            }*/
+            /*val fragment2 = MapsFragment()
+            val fragmentManager = fragmentManager
+            val fragmentTransaction = fragmentManager!!.beginTransaction()
+            fragmentTransaction.replace(R.id.inf, fragment2)
+            fragmentTransaction.commit()*/
+        }
         return  view
     }
-private fun searchAccident(rok: Int,alkohol: String,sharedData: DataResponse)
-{
-    var featury = sharedData.features
-    val featureList = featury.filter {
-        try{
-            it.properties.rok == rok && it.properties.alkohol.startsWith(alkohol) //&&
-//                    it.properties.pricina == asciiEncodedString &&
-//                    it.properties.ozn_osoba.startsWith(prilba) &&
-//                    it.properties.nasledek.startsWith(nasledek) &&
-//                    it.properties.povetrnostni_podm.contains(povetrnostniPodminky) &&
-//                    it.properties.viditelnost.startsWith(noc)
+    private fun searchAccident(rok: Int,alkohol: String,sharedData: DataResponse)
+    {
+        var featury = sharedData.features
+        val featureList = featury.filter {
+            try{
+                it.properties.rok == rok && it.properties.alkohol.startsWith(alkohol) //&&
+                       /* it.properties.pricina == asciiEncodedString &&
+                        it.properties.ozn_osoba.startsWith(prilba) &&
+                        it.properties.nasledek.startsWith(nasledek) &&
+                        it.properties.povetrnostni_podm.contains(povetrnostniPodminky) &&
+                        it.properties.viditelnost.startsWith(noc)*/
+            }
+            catch (e: Exception){
+                Toast.makeText(activity?.applicationContext, "Žádný záznam", Toast.LENGTH_SHORT).show()
+                return
+            }
         }
-        catch (e: Exception){
-            Toast.makeText(activity?.applicationContext, "Žádný záznam", Toast.LENGTH_SHORT).show()
-            return
-        }
-    }
-    Toast.makeText(activity?.applicationContext, "Počet záznamů:" + featureList.size.toString(), Toast.LENGTH_SHORT).show()
-    println(featureList.size)
-}
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment InfoFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic fun newInstance(param1: String, param2: String) =
-                InfoFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(ARG_PARAM1, param1)
-                        putString(ARG_PARAM2, param2)
-                    }
-                }
+        Toast.makeText(activity?.applicationContext, "Počet záznamů:" + featureList.size.toString(), Toast.LENGTH_SHORT).show()
+        println(featureList.size)
     }
 }

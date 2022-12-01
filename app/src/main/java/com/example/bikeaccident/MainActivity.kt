@@ -2,8 +2,11 @@ package com.example.bikeaccident
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -47,16 +50,17 @@ class MainActivity : AppCompatActivity() {
         barChart = binding.idBarChart
         downloadTask()
         btn.setOnClickListener {
+            //Navigation.findNavController(view).navigate(R.id.)
             //barChart.fitScreen()
             //val fragment = InfoFragment()
             val infoFragment = InfoFragment()
-            val bundle = Bundle()
-            bundle.putInt("year",12)
             val fragment : Fragment? =
             supportFragmentManager.findFragmentByTag(InfoFragment::class.java.simpleName)
-            infoFragment.arguments = bundle
             if (fragment !is InfoFragment){
                 supportFragmentManager.beginTransaction()
+                    .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                    //.show(infoFragment)
+                    //.setVisibility(View.GONE);
                     .replace(R.id.containerForFirstFragment, infoFragment,InfoFragment::class.java.simpleName)
                     .addToBackStack(null)
                     .commit()
