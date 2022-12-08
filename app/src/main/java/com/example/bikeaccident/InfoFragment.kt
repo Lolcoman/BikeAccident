@@ -11,18 +11,36 @@ import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.bikeaccident.Models.DataResponse
 import com.example.bikeaccident.databinding.FragmentInfoBinding
 import com.google.gson.Gson
 
 class InfoFragment : Fragment() {
     private lateinit var binding: FragmentInfoBinding
+    private val itemsList = ArrayList<String>()
+    private lateinit var customAdapter: CustomAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val mPrefs : SharedPreferences?= activity?.getPreferences(Context.MODE_PRIVATE);
         binding = FragmentInfoBinding.inflate(layoutInflater)
         val view = binding.root
+
+        //RECYCLER VIEWER
+        val recyclerView: RecyclerView = binding.RecyclerView
+        customAdapter = CustomAdapter(itemsList)
+        val layoutManager = LinearLayoutManager(activity?.applicationContext)
+        recyclerView.layoutManager = layoutManager
+        recyclerView.adapter = customAdapter
+
+//        prepareItems()
+//        val navHostFragment = activity?.supportFragmentManager
+//            ?.findFragmentById(binding.fragmentContainerView4.id) as NavHostFragment
+//        navController = navHostFragment.navController
+
         // Inflate the layout for this fragment
         //val view = inflater.inflate(R.layout.fragment_info,container,false)
         //text = view.findViewById(R.id.textView1)
@@ -30,6 +48,9 @@ class InfoFragment : Fragment() {
         val gsonn = Gson()
         val jsonn = mPrefs?.getString("MyObject", "")
         val sharedData = gsonn.fromJson(jsonn, DataResponse::class.java)
+
+        //itemsList.add(sharedData.features[0].properties.rok.toString())
+
         //val spn = binding.spinner
         //Surový list
         val list: ArrayList<String> = ArrayList()
@@ -78,6 +99,10 @@ class InfoFragment : Fragment() {
         }
 
         binding.mapShow.setOnClickListener {
+//            findNavController().navigate(binding.navHostFragment.id)
+            /*val fragment = MapsFragment()
+            val transaction = fragmentManager?.beginTransaction()
+            transaction?.replace(binding.fragmentContainerView4.id,fragment)?.commit()*/
             /*val myLatitude = 49.171130437000045
             val myLongitude = 16.520742066000025
             val gmmIntentUri =
@@ -95,13 +120,31 @@ class InfoFragment : Fragment() {
                         .show()
                 }
             }*/
-            /*val fragment2 = MapsFragment()
+
+            Navigation.findNavController(view).navigate(com.example.bikeaccident.R.id.action_infoFragment_to_mapsFragment)
+           /* val fragment2 = MapsFragment()
             val fragmentManager = fragmentManager
             val fragmentTransaction = fragmentManager!!.beginTransaction()
-            fragmentTransaction.replace(R.id.inf, fragment2)
+            fragmentTransaction.replace(binding.fragmentContainerView.id, fragment2)
             fragmentTransaction.commit()*/
         }
         return  view
+    }
+    private fun prepareItems() {
+        itemsList.add("Item 1")
+        itemsList.add("Item 2")
+        itemsList.add("Item 3")
+        itemsList.add("Item 4")
+        itemsList.add("Item 5")
+        itemsList.add("Item 6")
+        itemsList.add("Item 7")
+        itemsList.add("Item 8")
+        itemsList.add("Item 9")
+        itemsList.add("Item 10")
+        itemsList.add("Item 11")
+        itemsList.add("Item 12")
+        itemsList.add("Item 13")
+        customAdapter.notifyDataSetChanged()
     }
     private fun searchAccident(rok: Int,alkohol: String,sharedData: DataResponse)
     {
@@ -120,7 +163,16 @@ class InfoFragment : Fragment() {
                 return
             }
         }
+        for (item in featureList){
+            itemsList.add(item.properties.objectid.toString())
+            itemsList.add(item.properties.rok.toString())
+            itemsList.add(String(item.properties.alkohol.toByteArray(charset("ISO-8859-1")), charset("UTF-8")))
+            itemsList.add(String(item.properties.misto_nehody.toByteArray(charset("ISO-8859-1")), charset("UTF-8")))
+//            itemsList.add(String(item.properties.pricina.toByteArray(charset("ISO-8859-1")), charset("UTF-8")))
+        }
+        customAdapter.notifyDataSetChanged()
         Toast.makeText(activity?.applicationContext, "Počet záznamů:" + featureList.size.toString(), Toast.LENGTH_SHORT).show()
+        //binding.RecyclerView
         println(featureList.size)
     }
 }

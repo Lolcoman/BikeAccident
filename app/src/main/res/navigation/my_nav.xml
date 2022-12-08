@@ -3,24 +3,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/my_nav"
-    app:startDestination="@id/infoFragment">
+    app:startDestination="@id/graphFragment">
 
     <fragment
         android:id="@+id/infoFragment"
         android:name="com.example.bikeaccident.InfoFragment"
-        android:label="fragment_info"
+        android:label="Vyhledávání nehod"
         tools:layout="@layout/fragment_info" >
         <action
             android:id="@+id/action_infoFragment_to_mapsFragment"
             app:destination="@id/mapsFragment" />
+        <action
+            android:id="@+id/action_infoFragment_to_graphFragment"
+            app:destination="@id/graphFragment" />
     </fragment>
     <fragment
         android:id="@+id/mapsFragment"
         android:name="com.example.bikeaccident.MapsFragment"
-        android:label="fragment_maps"
+        android:label="Mapa nehod"
         tools:layout="@layout/fragment_maps" >
         <action
             android:id="@+id/action_mapsFragment_to_infoFragment"
+            app:destination="@id/infoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/graphFragment"
+        android:name="com.example.bikeaccident.GraphFragment"
+        android:label="Graf nehod"
+        tools:layout="@layout/fragment_graph" >
+        <action
+            android:id="@+id/action_graphFragment_to_infoFragment"
             app:destination="@id/infoFragment" />
     </fragment>
 </navigation>

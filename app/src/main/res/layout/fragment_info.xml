@@ -1,62 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragmentContainerView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#6B9EEC"
+    android:orientation="vertical"
+    app:defaultNavHost="true"
     tools:context=".InfoFragment">
 
-    <LinearLayout
+
+    <!--        <androidx.fragment.app.FragmentContainerView-->
+    <!--            android:id="@+id/fragmentContainerView4"-->
+    <!--            android:name="androidx.navigation.fragment.NavHostFragment"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            app:defaultNavHost="true"-->
+    <!--            app:navGraph="@navigation/my_nav" />-->
+    <!--    <LinearLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:orientation="vertical"-->
+    <!--        android:layout_margin="5dp">-->
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="5dp">
+        android:layout_margin="10dp"
+        android:hint="Rok"
+        app:boxStrokeColor="#455A64"
+        app:counterEnabled="true"
+        app:counterMaxLength="4"
+        app:endIconMode="clear_text"
+        app:errorEnabled="true"
+        app:startIconDrawable="@drawable/calendar">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:hint="Rok"
-            app:startIconDrawable="@drawable/calendar"
-            app:endIconMode="clear_text"
-            android:layout_margin="10dp"
-            app:counterMaxLength="4"
-            app:counterEnabled="true"
-            app:errorEnabled="true"
-            app:boxStrokeColor="#455A64">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextYear"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number"
-                android:text="2010"/>
-        </com.google.android.material.textfield.TextInputLayout>
-<TableLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="9dp"
-    android:background="@drawable/border">
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal">
-        <TextView
-            android:id="@+id/textView5"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextYear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Alkohol"
-            android:fontFamily="sans-serif"
-            android:textSize="16dp"/>
-    </TableRow>
+            android:ems="10"
+            android:inputType="number"
+            android:text="2010" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="9dp"
+        android:background="@drawable/border">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:text="Alkohol"
+                android:textSize="16dp" />
+        </TableRow>
+
         <RadioGroup
             android:id="@+id/alkoholGroup"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:checkedButton="@+id/alkoholAno">
+            android:layout_height="wrap_content"
+            android:checkedButton="@+id/alkoholAno"
+            android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/alkoholAno"
@@ -71,12 +86,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Ne" />
+
             <RadioButton
                 android:id="@+id/alkoholNezjistovan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Nezjišťován" />
+
             <RadioButton
                 android:id="@+id/drogy"
                 android:layout_width="wrap_content"
@@ -85,79 +102,86 @@
                 android:text="Pod vlivem drog" />
 
         </RadioGroup>
-</TableLayout>
-        <TableLayout
+    </TableLayout>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp">
+
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="8dp">
+            android:layout_height="match_parent">
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+            <Button
+                android:id="@+id/searchButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:text="Hledat" />
 
-                <Button
-                    android:id="@+id/searchButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Hledat"
-                    android:layout_marginRight="5dp"
-                    />
+            <!--                <Button-->
+            <!--                    android:id="@+id/clearButton"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_weight="1"-->
+            <!--                    android:text="Smazat"-->
+            <!--                    android:layout_marginLeft="5dp"/>-->
+        </TableRow>
+    </TableLayout>
 
-<!--                <Button-->
-<!--                    android:id="@+id/clearButton"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:text="Smazat"-->
-<!--                    android:layout_marginLeft="5dp"/>-->
-            </TableRow>
-        </TableLayout>
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:stretchColumns="1,2,3,4">
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="1,2,3,4">
+
         <TableRow>
+
             <TextView
+                android:layout_column="1"
+                android:gravity="center"
+                android:padding="10dp"
                 android:text="ID"
                 android:textSize="16dp"
-                android:textStyle="bold"
-                android:padding="10dp"
-                android:gravity="center"
-                android:layout_column="1"/>
+                android:textStyle="bold" />
+
             <TextView
+                android:layout_column="1"
+                android:gravity="center"
+                android:padding="10dp"
                 android:text="ROK"
                 android:textSize="16dp"
-                android:textStyle="bold"
-                android:padding="10dp"
-                android:gravity="center"
-                android:layout_column="1"/>
+                android:textStyle="bold" />
+
             <TextView
+                android:layout_column="1"
+                android:gravity="center"
+                android:padding="10dp"
                 android:text="ALKOHOL"
                 android:textSize="16dp"
-                android:textStyle="bold"
-                android:padding="10dp"
-                android:gravity="center"
-                android:layout_column="1"/>
+                android:textStyle="bold" />
+
             <TextView
+                android:layout_column="1"
+                android:gravity="center"
+                android:padding="10dp"
                 android:text="MÍSTO"
                 android:textSize="16dp"
-                android:textStyle="bold"
-                android:padding="10dp"
-                android:gravity="center"
-                android:layout_column="1"/>
+                android:textStyle="bold" />
         </TableRow>
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </TableLayout>
-        <Button
-            android:id="@+id/mapShow"
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/RecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Zobrazit na mapě"
-            android:layout_margin="8dp"
-            />
-    </LinearLayout>
-</ScrollView>
+            android:layout_height="340dp" />
+    </TableLayout>
+
+    <Button
+        android:id="@+id/mapShow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="Zobrazit na mapě" />
+</LinearLayout>
+<!--</LinearLayout>-->
