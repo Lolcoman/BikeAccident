@@ -25,8 +25,11 @@ class InfoFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val mPrefs : SharedPreferences?= activity?.getPreferences(Context.MODE_PRIVATE);
+        //val mPrefs : SharedPreferences?= activity?.getPreferences(Context.MODE_PRIVATE);
         binding = FragmentInfoBinding.inflate(layoutInflater)
+        val pref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        val jsonn = pref.getString("MyObject", "")
+
         val view = binding.root
 
         //RECYCLER VIEWER
@@ -46,7 +49,7 @@ class InfoFragment : Fragment() {
         //text = view.findViewById(R.id.textView1)
         //val data = arguments
         val gsonn = Gson()
-        val jsonn = mPrefs?.getString("MyObject", "")
+        //val jsonn = mPrefs?.getString("MyObject", "")
         val sharedData = gsonn.fromJson(jsonn, DataResponse::class.java)
 
         //itemsList.add(sharedData.features[0].properties.rok.toString())

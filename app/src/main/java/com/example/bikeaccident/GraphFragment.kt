@@ -6,12 +6,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.DataBindingUtil.setContentView
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -116,8 +113,9 @@ class GraphFragment : Fragment() {
     }
 
     private fun downloadTask() {
-        val mPrefs = this.requireActivity()
-            .getSharedPreferences("pref", Context.MODE_PRIVATE)
+        val pref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+//        val mPrefs = this.requireActivity()
+//            .getSharedPreferences("pref", Context.MODE_PRIVATE)
         //var mPrefs = getPreferences(AppCompatActivity.MODE_PRIVATE)
         val queue = Volley.newRequestQueue(this.requireActivity())
         val request = StringRequest(
@@ -130,17 +128,17 @@ class GraphFragment : Fragment() {
                 val features = apiData.features
                 getYearGraph(features)
 
-                val prefsEditor = mPrefs.edit()
+                val prefsEditor = pref.edit()
                 val gson = Gson()
                 val json = gson.toJson(apiData)
                 prefsEditor.putString("MyObject", json)
-                prefsEditor.apply()
+                prefsEditor.commit()
 
                 //JEN TEST ZDA JE DOBŘE ULOŽENO!
-                val gsonn = Gson()
-                val jsonn = mPrefs.getString("MyObject", "")
-                val test = gsonn.fromJson(jsonn, DataResponse::class.java)
-                println(test.features)
+//                val gsonn = Gson()
+//                val jsonn = mPrefs.getString("MyObject", "")
+//                val test = gsonn.fromJson(jsonn, DataResponse::class.java)
+//                println(test.features)
             },
             { })
         queue.add(request)
