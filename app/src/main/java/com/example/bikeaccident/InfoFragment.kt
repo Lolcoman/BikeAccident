@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil.setContentView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -24,10 +25,9 @@ class InfoFragment : Fragment() {
     private lateinit var binding: FragmentInfoBinding
     private val itemsList = ArrayList<String>()
     private lateinit var customAdapter: CustomAdapter
-
+    var accident = mutableListOf<Accident>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         var viewModel = ViewModelProvider(this).get(FragmentViewModel::class.java)
     }
     private val viewModel = FragmentViewModel()
@@ -41,12 +41,18 @@ class InfoFragment : Fragment() {
 
         val view = binding.root
 
+//        val accident = mutableListOf<Accident>()
+
         //RECYCLER VIEWER
         val recyclerView: RecyclerView = binding.RecyclerView
-        customAdapter = CustomAdapter(itemsList)
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(activity?.applicationContext)
+            adapter = AccidentAdapter(accident)
+        }
+        /*customAdapter = CustomAdapter(itemsList)
         val layoutManager = LinearLayoutManager(activity?.applicationContext)
         recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = customAdapter
+        recyclerView.adapter = customAdapter*/
 
 //        prepareItems()
 //        val navHostFragment = activity?.supportFragmentManager
@@ -108,7 +114,7 @@ class InfoFragment : Fragment() {
             val alc = alkohol.text.toString()
 
 
-            viewModel.searchAccident(rok, alc, sharedData)
+            searchAccident(rok, alc, sharedData)
         }
 
         binding.mapShow.setOnClickListener {
@@ -162,24 +168,22 @@ class InfoFragment : Fragment() {
             }
         }
         for (item in featureList){
-            itemsList.add(item.properties.objectid.toString())
-            itemsList.add(item.properties.rok.toString())
-            itemsList.add(String(item.properties.alkohol.toByteArray(charset("ISO-8859-1")), charset("UTF-8")))
-            itemsList.add(String(item.properties.misto_nehody.toByteArray(charset("ISO-8859-1")), charset("UTF-8")))
+            accident.add(Accident(item.properties.objectid,item.properties.rok,String(item.properties.alkohol.toByteArray(charset("ISO-8859-1")), charset("UTF-8")),String(item.properties.misto_nehody.toByteArray(charset("ISO-8859-1")), charset("UTF-8"))))
+//            itemsList.add(item.properties.objectid.toString())
+//            itemsList.add(item.properties.rok.toString())
+//            itemsList.add(String(item.properties.alkohol.toByteArray(charset("ISO-8859-1")), charset("UTF-8")))
+//            itemsList.add(String(item.properties.misto_nehody.toByteArray(charset("ISO-8859-1")), charset("UTF-8")))
 //            itemsList.add(String(item.properties.pricina.toByteArray(charset("ISO-8859-1")), charset("UTF-8")))
         }
-        customAdapter.notifyDataSetChanged()
+        //RECYCLER VIEWER
+        val recyclerView: RecyclerView = binding.RecyclerView
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(activity?.applicationContext)
+            adapter = AccidentAdapter(accident)
+        }
         Toast.makeText(activity?.applicationContext, "Počet záznamů:" + featureList.size.toString(), Toast.LENGTH_SHORT).show()
         //binding.RecyclerView
         println(featureList.size)
 
-    }
-
-    // Call this in response to some state change in the VM
-    private fun updateRecyclerView() {
-        // Generate a list of "item viewmodels" to represent
-        // each child item from the Fragment ViewModel's data state
-        customAdapter = CustomAdapter(itemsList)
-        customAdapter.notifyDataSetChanged()
     }
 }
