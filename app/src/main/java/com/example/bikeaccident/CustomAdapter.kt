@@ -11,9 +11,6 @@ internal class CustomAdapter(private var itemsList: List<String>) :
     RecyclerView.Adapter<CustomAdapter.MyViewHolder>() {
     internal inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var itemTextView: TextView = view.findViewById(R.id.itemTextView)
-        var itemTextView1: TextView = view.findViewById(R.id.itemTextView1)
-//        var itemTextView2: TextView = view.findViewById(R.id.itemTextView2)
-//        var itemTextView3: TextView = view.findViewById(R.id.itemTextView3)
     }
     @NonNull
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -35,9 +32,7 @@ internal class CustomAdapter(private var itemsList: List<String>) :
 ////        holder.itemTextView3.text = place
 //        }
         val item = itemsList[position]
-        val year = itemsList[position]
         holder.itemTextView.text = item
-        holder.itemTextView1.text = year
     }
     override fun getItemCount(): Int {
         return itemsList.size

@@ -11,6 +11,8 @@ import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +24,13 @@ class InfoFragment : Fragment() {
     private lateinit var binding: FragmentInfoBinding
     private val itemsList = ArrayList<String>()
     private lateinit var customAdapter: CustomAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        var viewModel = ViewModelProvider(this).get(FragmentViewModel::class.java)
+    }
+    private val viewModel = FragmentViewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -98,7 +107,8 @@ class InfoFragment : Fragment() {
             alkohol.text
             val alc = alkohol.text.toString()
 
-            searchAccident(rok,alc,sharedData)
+
+            viewModel.searchAccident(rok, alc, sharedData)
         }
 
         binding.mapShow.setOnClickListener {
@@ -133,24 +143,9 @@ class InfoFragment : Fragment() {
         }
         return  view
     }
-    private fun prepareItems() {
-        itemsList.add("Item 1")
-        itemsList.add("Item 2")
-        itemsList.add("Item 3")
-        itemsList.add("Item 4")
-        itemsList.add("Item 5")
-        itemsList.add("Item 6")
-        itemsList.add("Item 7")
-        itemsList.add("Item 8")
-        itemsList.add("Item 9")
-        itemsList.add("Item 10")
-        itemsList.add("Item 11")
-        itemsList.add("Item 12")
-        itemsList.add("Item 13")
-        customAdapter.notifyDataSetChanged()
-    }
     private fun searchAccident(rok: Int,alkohol: String,sharedData: DataResponse)
     {
+        itemsList.clear()
         var featury = sharedData.features
         val featureList = featury.filter {
             try{
@@ -177,5 +172,14 @@ class InfoFragment : Fragment() {
         Toast.makeText(activity?.applicationContext, "Počet záznamů:" + featureList.size.toString(), Toast.LENGTH_SHORT).show()
         //binding.RecyclerView
         println(featureList.size)
+
+    }
+
+    // Call this in response to some state change in the VM
+    private fun updateRecyclerView() {
+        // Generate a list of "item viewmodels" to represent
+        // each child item from the Fragment ViewModel's data state
+        customAdapter = CustomAdapter(itemsList)
+        customAdapter.notifyDataSetChanged()
     }
 }
