@@ -1,6 +1,7 @@
 package com.example.bikeaccident
 
 import android.R
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -24,7 +25,6 @@ import com.google.gson.Gson
 class InfoFragment : Fragment() {
     private lateinit var binding: FragmentInfoBinding
     private val itemsList = ArrayList<String>()
-    private lateinit var customAdapter: CustomAdapter
     var accident = mutableListOf<Accident>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -149,41 +149,47 @@ class InfoFragment : Fragment() {
         }
         return  view
     }
-    private fun searchAccident(rok: Int,alkohol: String,sharedData: DataResponse)
+    @SuppressLint("NotifyDataSetChanged")
+    private fun searchAccident(rok: Int, alkohol: String, sharedData: DataResponse)
     {
+        val recyclerView: RecyclerView = binding.RecyclerView
         itemsList.clear()
+        accident.clear()
         var featury = sharedData.features
         val featureList = featury.filter {
             try{
-                it.properties.rok == rok && it.properties.alkohol.startsWith(alkohol) //&&
-                       /* it.properties.pricina == asciiEncodedString &&
-                        it.properties.ozn_osoba.startsWith(prilba) &&
-                        it.properties.nasledek.startsWith(nasledek) &&
-                        it.properties.povetrnostni_podm.contains(povetrnostniPodminky) &&
-                        it.properties.viditelnost.startsWith(noc)*/
+                var alc = String(it.properties.alkohol.toByteArray(charset("ISO-8859-1")),
+                    charset("UTF-8"))
+                when (alc){
+                    "Ne" -> it.properties.rok == rok && alc == alkohol
+                    "Nezjišťován" -> it.properties.rok == rok && alc == alkohol
+                    else -> {
+                        it.properties.rok == rok && alc.startsWith(alkohol)
+                    }
+                }
             }
             catch (e: Exception){
-                Toast.makeText(activity?.applicationContext, "Žádný záznam", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity?.applicationContext, "Žádný záznam!", Toast.LENGTH_SHORT).show()
+                println(e)
                 return
             }
         }
+        if (featureList.isEmpty()){
+            Toast.makeText(activity?.applicationContext, "Žádný záznam!", Toast.LENGTH_SHORT).show()
+            recyclerView.adapter?.notifyDataSetChanged()
+            return
+        }
         for (item in featureList){
-            accident.add(Accident(item.properties.objectid,item.properties.rok,String(item.properties.alkohol.toByteArray(charset("ISO-8859-1")), charset("UTF-8")),String(item.properties.misto_nehody.toByteArray(charset("ISO-8859-1")), charset("UTF-8"))))
-//            itemsList.add(item.properties.objectid.toString())
-//            itemsList.add(item.properties.rok.toString())
-//            itemsList.add(String(item.properties.alkohol.toByteArray(charset("ISO-8859-1")), charset("UTF-8")))
-//            itemsList.add(String(item.properties.misto_nehody.toByteArray(charset("ISO-8859-1")), charset("UTF-8")))
-//            itemsList.add(String(item.properties.pricina.toByteArray(charset("ISO-8859-1")), charset("UTF-8")))
+            accident.add(Accident(item.properties.objectid,item.properties.rok,
+                String(item.properties.alkohol.toByteArray(charset("ISO-8859-1")), charset("UTF-8")),
+                String(item.properties.nazev.toByteArray(charset("ISO-8859-1")), charset("UTF-8"))))
         }
         //RECYCLER VIEWER
-        val recyclerView: RecyclerView = binding.RecyclerView
         recyclerView.apply {
             layoutManager = LinearLayoutManager(activity?.applicationContext)
             adapter = AccidentAdapter(accident)
         }
         Toast.makeText(activity?.applicationContext, "Počet záznamů:" + featureList.size.toString(), Toast.LENGTH_SHORT).show()
-        //binding.RecyclerView
-        println(featureList.size)
 
     }
 }

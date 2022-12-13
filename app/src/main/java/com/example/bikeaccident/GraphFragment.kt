@@ -132,7 +132,7 @@ class GraphFragment : Fragment() {
                 val gson = Gson()
                 val json = gson.toJson(apiData)
                 prefsEditor.putString("MyObject", json)
-                prefsEditor.commit()
+                prefsEditor.apply()
 
                 //JEN TEST ZDA JE DOBŘE ULOŽENO!
 //                val gsonn = Gson()
