@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,8 +22,9 @@ import com.google.gson.Gson
 open class InfoFragment : Fragment() {
     private lateinit var binding: FragmentInfoBinding
     private lateinit var viewModel:FragmentViewModel
+    private lateinit var recyclerViewAdapter: AccidentAdapter
 
-    override fun onPause() {
+   /* override fun onPause() {
         super.onPause()
         binding.RecyclerView.layoutManager?.onSaveInstanceState()?.let { viewModel.saveRecyclerViewState(it) }
     }
@@ -34,22 +36,62 @@ open class InfoFragment : Fragment() {
                 viewModel.restoreRecyclerViewState()
             )
         }
-    }
+    }*/
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val pref = requireActivity().getPreferences(Context.MODE_PRIVATE)
         val jsonn = pref.getString("MyObject", "")
 
-        val view = binding.root
+//        val view = binding.root
 
-        //RECYCLER VIEWER
         val recyclerView: RecyclerView = binding.RecyclerView
-//        recyclerView.apply {
-//            layoutManager = LinearLayoutManager(activity?.applicationContext)
-//            adapter = AccidentAdapter(viewModel.accident)
-//        }
+        /*viewModel.accident2.observe(viewLifecycleOwner, Observer{ accident2 ->
+            recyclerView.adapter = AccidentAdapter(accident2)
+            recyclerViewAdapter.notifyDataSetChanged()
+        })*/
+        viewModel.accident2.observe(viewLifecycleOwner, Observer{ accident2 ->
+                recyclerView.also {
+                    it.layoutManager = LinearLayoutManager(requireContext())
+                    it.hasFixedSize()
+                    it.adapter = AccidentAdapter(accident2)
+                }
+            })
+        /*recyclerView.apply {
+            layoutManager = LinearLayoutManager(activity?.applicationContext)
+//            adapter = AccidentAdapter()
+        }*/
+        /*viewModel.getRecyclerListDataObserver().observe(viewLifecycleOwner, Observer{
+            recyclerView.adapter = AccidentAdapter(it)
+            recyclerViewAdapter.notifyDataSetChanged()
+        })*/
+        //RECYCLER VIEWER
+        /*val recyclerView: RecyclerView = binding.RecyclerView
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(activity?.applicationContext)
+            adapter = AccidentAdapter(viewModel.accident)
+        }
+        viewModel = ViewModelProvider(this)[FragmentViewModel::class.java]
+        viewModel.getRecyclerListDataObserver().observe(viewLifecycleOwner, Observer<MutableList<Accident>> {
+            recyclerView.adapter = AccidentAdapter(it)
+            recyclerViewAdapter.notifyDataSetChanged()
+        })*/
 //        recyclerView.adapter = AccidentAdapter(viewModel.accident)
+
+        /*viewModel._accident2.observe(viewLifecycleOwner, Observer {
+            recyclerView.apply {
+                layoutManager = LinearLayoutManager(activity?.applicationContext)
+//                adapter = AccidentAdapter(viewModel.accident)
+                adapter = AccidentAdapter(it)
+            }
+        })*/
+        /*viewModel.accident2.observe(viewLifecycleOwner, Observer {
+            recyclerView.apply {
+                layoutManager = LinearLayoutManager(activity?.applicationContext)
+//                adapter = AccidentAdapter(viewModel.accident)
+                adapter = AccidentAdapter(it)
+            }
+        })*/
         val gsonn = Gson()
         val sharedData = gsonn.fromJson(jsonn, DataResponse::class.java)
         //Surový list
@@ -81,12 +123,21 @@ open class InfoFragment : Fragment() {
             val alc = alkohol.text.toString()
 
 
-            viewModel.searchAccident(rok,alc,sharedData)
+
 //            searchAccident(rok, alc, sharedData)
-            recyclerView.apply {
+            /*recyclerView.apply {
                 layoutManager = LinearLayoutManager(activity?.applicationContext)
-                adapter = AccidentAdapter(viewModel.accident)
-            }
+                adapter = null
+            }*/
+            viewModel.searchAccident(rok,alc,sharedData)
+
+            /*viewModel.accident2.observe(viewLifecycleOwner, Observer{ accident2 ->
+                recyclerView.also {
+                    it.layoutManager = LinearLayoutManager(requireContext())
+                    it.hasFixedSize()
+                    it.adapter = AccidentAdapter(accident2)
+                }
+            })*/
         }
 
         binding.mapShow.setOnClickListener {
@@ -126,6 +177,17 @@ open class InfoFragment : Fragment() {
         viewModel = ViewModelProvider(this)[FragmentViewModel::class.java]
         //val mPrefs : SharedPreferences?= activity?.getPreferences(Context.MODE_PRIVATE);
         binding = FragmentInfoBinding.inflate(layoutInflater,container,false)
+
+        /*val recyclerView: RecyclerView = binding.RecyclerView
+        val pref = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        val jsonn = pref.getString("MyObject", "")
+        val gsonn = Gson()
+        val sharedData = gsonn.fromJson(jsonn, DataResponse::class.java)
+        viewModel.searchAccident(2010,"Ano",sharedData)
+        viewModel.accident2.observe(viewLifecycleOwner, Observer{ accident2 ->
+            recyclerView.adapter = AccidentAdapter(accident2)
+            recyclerViewAdapter.notifyDataSetChanged()
+        })*/
 //        val pref = requireActivity().getPreferences(Context.MODE_PRIVATE)
 //        val jsonn = pref.getString("MyObject", "")
 //

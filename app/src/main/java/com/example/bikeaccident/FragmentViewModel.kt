@@ -1,13 +1,21 @@
 package com.example.bikeaccident
 
 import android.os.Parcelable
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.bikeaccident.Models.DataResponse
 
 class FragmentViewModel: ViewModel() {
     var accident = mutableListOf<Accident>()
+    private val _accident2 = MutableLiveData<MutableList<Accident>>()
 
+    val accident2: LiveData<MutableList<Accident>>
+        get() = _accident2
+
+    fun getRecyclerListDataObserver(): MutableLiveData<MutableList<Accident>>{
+        return _accident2
+    }
 
     private lateinit var state: Parcelable
     fun saveRecyclerViewState(parcelable: Parcelable) { state = parcelable }
@@ -16,7 +24,6 @@ class FragmentViewModel: ViewModel() {
 
     fun searchAccident(rok: Int, alkohol: String, sharedData: DataResponse)
     {
-//        recyclerView = binding.RecyclerView
         accident.clear()
         var featury = sharedData.features
         val featureList = featury.filter {
@@ -41,6 +48,7 @@ class FragmentViewModel: ViewModel() {
             return
         }
         accident.add(Accident(1,2010,"ANO!!","Brno"))
+        accident2.value?.add(Accident(1,2010,"ANO!!","Brno"))
 //        for (item in featureList){
 //            accident.add(Accident(item.properties.objectid,item.properties.rok,
 //                String(item.properties.alkohol.toByteArray(charset("ISO-8859-1")), charset("UTF-8")),
