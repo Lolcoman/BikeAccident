@@ -22,21 +22,7 @@ import com.google.gson.Gson
 open class InfoFragment : Fragment() {
     private lateinit var binding: FragmentInfoBinding
     private lateinit var viewModel:FragmentViewModel
-    private lateinit var recyclerViewAdapter: AccidentAdapter
 
-   /* override fun onPause() {
-        super.onPause()
-        binding.RecyclerView.layoutManager?.onSaveInstanceState()?.let { viewModel.saveRecyclerViewState(it) }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (viewModel.stateInitialized()) {
-            binding.RecyclerView.layoutManager?.onRestoreInstanceState(
-                viewModel.restoreRecyclerViewState()
-            )
-        }
-    }*/
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,16 +33,26 @@ open class InfoFragment : Fragment() {
 
         val recyclerView: RecyclerView = binding.RecyclerView
         /*viewModel.accident2.observe(viewLifecycleOwner, Observer{ accident2 ->
-            recyclerView.adapter = AccidentAdapter(accident2)
-            recyclerViewAdapter.notifyDataSetChanged()
+            *//*recyclerView.adapter = AccidentAdapter(accident2)
+            layoutManager = LinearLayoutManager(activity?.applicationContext)
+            recyclerViewAdapter.notifyDataSetChanged()*//*
+            recyclerView.apply {
+//            layoutManager = LinearLayoutManager(activity?.applicationContext)
+            adapter = AccidentAdapter(accident2)
+            }
         })*/
+//        viewModel.accident2.value?.add(Accident(1,2010,"ANO!!","Brno"))
         viewModel.accident2.observe(viewLifecycleOwner, Observer{ accident2 ->
                 recyclerView.also {
                     it.layoutManager = LinearLayoutManager(requireContext())
-                    it.hasFixedSize()
                     it.adapter = AccidentAdapter(accident2)
                 }
-            })
+        })
+        viewModel.message.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let {
+                Toast.makeText(activity?.applicationContext, "Žádné nehody!", Toast.LENGTH_LONG).show()
+            }
+        })
         /*recyclerView.apply {
             layoutManager = LinearLayoutManager(activity?.applicationContext)
 //            adapter = AccidentAdapter()
@@ -105,19 +101,19 @@ open class InfoFragment : Fragment() {
         for (i in 0 until list.size ){
             decodeList.add(String( list[i].toByteArray(charset("ISO-8859-1")), charset("UTF-8")))
         }
-        binding.searchButton.setOnClickListener {
+        binding.searchButton?.setOnClickListener {
             var rokText = binding.editTextYear
             var rok: Int
-            if(rokText.text.toString() == "" || rokText.text.toString().toInt() < 2010 || rokText.text.toString().toInt() > 2021)
+            if(rokText?.text.toString() == "" || rokText?.text.toString().toInt() < 2010 || rokText?.text.toString().toInt() > 2021)
             {
-                rokText.error = "Zadejte rok 2010-2021";
+                rokText?.error = "Zadejte rok 2010-2021";
                 //Toast.makeText(activity?.applicationContext, "Zadejte rok!", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }else{
-                rok = rokText.text.toString().toInt()
+                rok = rokText?.text.toString().toInt()
             }
             var groupAlkohol = binding.alkoholGroup
-            var alkoholSelected = groupAlkohol.checkedRadioButtonId
+            var alkoholSelected = groupAlkohol!!.checkedRadioButtonId
             var alkohol = view.findViewById(alkoholSelected) as RadioButton
             alkohol.text
             val alc = alkohol.text.toString()
@@ -140,7 +136,7 @@ open class InfoFragment : Fragment() {
             })*/
         }
 
-        binding.mapShow.setOnClickListener {
+        binding.mapShow?.setOnClickListener {
 //            findNavController().navigate(binding.navHostFragment.id)
             /*val fragment = MapsFragment()
             val transaction = fragmentManager?.beginTransaction()
@@ -177,7 +173,6 @@ open class InfoFragment : Fragment() {
         viewModel = ViewModelProvider(this)[FragmentViewModel::class.java]
         //val mPrefs : SharedPreferences?= activity?.getPreferences(Context.MODE_PRIVATE);
         binding = FragmentInfoBinding.inflate(layoutInflater,container,false)
-
         /*val recyclerView: RecyclerView = binding.RecyclerView
         val pref = requireActivity().getPreferences(Context.MODE_PRIVATE)
         val jsonn = pref.getString("MyObject", "")

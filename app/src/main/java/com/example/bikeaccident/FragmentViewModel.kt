@@ -1,30 +1,46 @@
 package com.example.bikeaccident
 
-import android.os.Parcelable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.bikeaccident.Models.DataResponse
 
 class FragmentViewModel: ViewModel() {
-    var accident = mutableListOf<Accident>()
     private val _accident2 = MutableLiveData<MutableList<Accident>>()
 
     val accident2: LiveData<MutableList<Accident>>
         get() = _accident2
 
-    fun getRecyclerListDataObserver(): MutableLiveData<MutableList<Accident>>{
-        return _accident2
+    private val statusMessage = MutableLiveData<Event<Boolean>>()
+
+    val message : LiveData<Event<Boolean>>
+        get() = statusMessage
+
+    fun <T> MutableLiveData<MutableList<T>>.addNewItem(item: T) {
+        val oldValue = this.value ?: mutableListOf()
+        oldValue.add(item)
+        this.value = oldValue
     }
 
-    private lateinit var state: Parcelable
-    fun saveRecyclerViewState(parcelable: Parcelable) { state = parcelable }
-    fun restoreRecyclerViewState() : Parcelable = state
-    fun stateInitialized() : Boolean = ::state.isInitialized
+    fun <T> MutableLiveData<MutableList<T>>.addNewItemAt(index: Int, item: T) {
+        val oldValue = this.value ?: mutableListOf()
+        oldValue.add(index, item)
+        this.value = oldValue
+    }
+
+    fun <T> MutableLiveData<MutableList<T>>.removeItemAt(index: Int) {
+        if (!this.value.isNullOrEmpty()) {
+            val oldValue = this.value
+            oldValue?.removeAt(index)
+            this.value = oldValue
+        } else {
+            this.value = mutableListOf()
+        }
+    }
 
     fun searchAccident(rok: Int, alkohol: String, sharedData: DataResponse)
     {
-        accident.clear()
+        accident2.value?.clear()
         var featury = sharedData.features
         val featureList = featury.filter {
             try{
@@ -44,20 +60,13 @@ class FragmentViewModel: ViewModel() {
             }
         }
         if (featureList.isEmpty()){
-//            recyclerView.adapter?.notifyDataSetChanged()
+            statusMessage.value = Event(false)
             return
         }
-        accident.add(Accident(1,2010,"ANO!!","Brno"))
-        accident2.value?.add(Accident(1,2010,"ANO!!","Brno"))
-//        for (item in featureList){
-//            accident.add(Accident(item.properties.objectid,item.properties.rok,
-//                String(item.properties.alkohol.toByteArray(charset("ISO-8859-1")), charset("UTF-8")),
-//                String(item.properties.nazev.toByteArray(charset("ISO-8859-1")), charset("UTF-8"))))
-//        }
-        //RECYCLER VIEWER
-//        recyclerView.apply {
-//            layoutManager = LinearLayoutManager(activity?.applicationContext)
-//            adapter = AccidentAdapter(accident)
-//        }
+        for (item in featureList){
+            _accident2.addNewItem(Accident(item.properties.objectid,item.properties.rok,
+                String(item.properties.alkohol.toByteArray(charset("ISO-8859-1")), charset("UTF-8")),
+                String(item.properties.nazev.toByteArray(charset("ISO-8859-1")), charset("UTF-8"))))
+        }
     }
 }

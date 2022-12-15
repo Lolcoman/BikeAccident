@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragmentContainerView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#6B9EEC"
+    android:orientation="vertical"
+    app:defaultNavHost="true"
+    tools:context=".InfoFragment">
+
+
+    <!--        <androidx.fragment.app.FragmentContainerView-->
+    <!--            android:id="@+id/fragmentContainerView4"-->
+    <!--            android:name="androidx.navigation.fragment.NavHostFragment"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            app:defaultNavHost="true"-->
+    <!--            app:navGraph="@navigation/my_nav" />-->
+    <!--    <LinearLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:orientation="vertical"-->
+    <!--        android:layout_margin="5dp">-->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/RecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--    <TableLayout-->
+<!--        android:id="@+id/tableLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="8dp"-->
+<!--        android:layout_marginTop="228dp"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/tableLayout2"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/textInputLayout"-->
+<!--        tools:layout_editor_absoluteX="8dp">-->
+
+<!--        <TableRow-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent">-->
+
+<!--            -->
+
+<!--            &lt;!&ndash;                <Button&ndash;&gt;-->
+<!--            &lt;!&ndash;                    android:id="@+id/clearButton"&ndash;&gt;-->
+<!--            &lt;!&ndash;                    android:layout_width="wrap_content"&ndash;&gt;-->
+<!--            &lt;!&ndash;                    android:layout_height="wrap_content"&ndash;&gt;-->
+<!--            &lt;!&ndash;                    android:layout_weight="1"&ndash;&gt;-->
+<!--            &lt;!&ndash;                    android:text="Smazat"&ndash;&gt;-->
+<!--            &lt;!&ndash;                    android:layout_marginLeft="5dp"/>&ndash;&gt;-->
+<!--        </TableRow>-->
+<!--    </TableLayout>-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+<!--</LinearLayout>-->
