@@ -5,25 +5,31 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.bikeaccident.databinding.ItemBinding
 
 class AccidentAdapter(private val accident: MutableList<Accident>) : RecyclerView.Adapter<AccidentAdapter.ViewHolder>() {
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val id: TextView = itemView.findViewById(R.id.itemTextView)
-        val year: TextView = itemView.findViewById(R.id.itemTextView1)
-        val alc: TextView = itemView.findViewById(R.id.itemTextView2)
-        val place: TextView = itemView.findViewById(R.id.itemTextView3)
+
+    private lateinit var binding: ItemBinding
+
+    inner class ViewHolder(itemView: ItemBinding) : RecyclerView.ViewHolder(itemView.root) {
+        fun bind(item: Accident){
+            binding.apply {
+                itemTextView.text = item.id.toString()
+                itemTextView1.text = item.year.toString()
+                itemTextView2.text = item.alc
+                itemTextView3.text = item.place
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item, parent, false)
-        return ViewHolder(view)
+        val inflater = LayoutInflater.from(parent.context)
+        binding = ItemBinding.inflate(inflater,parent,false)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.id.text = accident[position].id.toString()
-        holder.year.text = accident[position].year.toString()
-        holder.alc.text = accident[position].alc
-        holder.place.text = accident[position].place
+        holder.bind(accident[position])
     }
 
     override fun getItemCount() = accident.size

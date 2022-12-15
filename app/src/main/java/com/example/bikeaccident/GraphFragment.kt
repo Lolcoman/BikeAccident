@@ -15,6 +15,7 @@ import com.android.volley.toolbox.Volley
 import com.example.bikeaccident.Models.DataResponse
 import com.example.bikeaccident.Models.Feature
 import com.example.bikeaccident.databinding.FragmentGraphBinding
+import com.example.bikeaccident.databinding.FragmentInfoBinding
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
@@ -41,18 +42,18 @@ class GraphFragment : Fragment() {
     lateinit var barData: BarData
     private var fragmentGraphBinding: FragmentGraphBinding? = null
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding = FragmentGraphBinding.bind(view)
-        fragmentGraphBinding = binding //if the view is already inflated then we can just bind it to view binding.
-
-        barChart = binding.idBarChart
-        downloadTask()
-        val btn = binding.buttonFetch
-        btn.setOnClickListener {
-            Navigation.findNavController(view).navigate(R.id.action_graphFragment_to_infoFragment)
-        }
-    }
+//    override fun onCreateView(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//        binding = FragmentGraphBinding.bind(view)
+//        fragmentGraphBinding = binding //if the view is already inflated then we can just bind it to view binding.
+//
+//        barChart = binding.idBarChart
+//        downloadTask()
+//        val btn = binding.buttonFetch
+//        btn.setOnClickListener {
+//            Navigation.findNavController(view).navigate(R.id.action_graphFragment_to_infoFragment)
+//        }
+//    }
 
 
     override fun onCreateView(
@@ -60,7 +61,17 @@ class GraphFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_graph, container,false)
+        binding = FragmentGraphBinding.inflate(layoutInflater)
+        fragmentGraphBinding = binding //if the view is already inflated then we can just bind it to view binding.
+        val view = binding.root
+        barChart = binding.idBarChart
+        downloadTask()
+        val btn = binding.buttonFetch
+        btn.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.action_graphFragment_to_infoFragment)
+        }
+//        return inflater.inflate(R.layout.fragment_graph, container,false)
+        return view
     }
 
     override fun onDestroyView() {
