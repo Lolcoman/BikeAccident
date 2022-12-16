@@ -1,5 +1,9 @@
 package com.example.bikeaccident.Models
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "nehody")
 data class PropertiesX(
     val alkohol: String,
     val cas: Int,
@@ -13,6 +17,7 @@ data class PropertiesX(
     val globalid: String,
     val hmotna_skoda: Int,
     val hodina: Int,
+    @PrimaryKey
     val id: Double,
     val join_count: Int,
     val lehce_zran_os: Int,

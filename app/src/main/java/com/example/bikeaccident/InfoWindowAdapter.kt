@@ -1,4 +1,4 @@
-package com.example.bikeaccident.Models
+package com.example.bikeaccident
 
 import android.app.Activity
 import android.view.View

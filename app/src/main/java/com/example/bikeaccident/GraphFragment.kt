@@ -14,8 +14,8 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.bikeaccident.Models.DataResponse
 import com.example.bikeaccident.Models.Feature
+import com.example.bikeaccident.Models.PropertiesX
 import com.example.bikeaccident.databinding.FragmentGraphBinding
-import com.example.bikeaccident.databinding.FragmentInfoBinding
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
@@ -24,6 +24,9 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -41,6 +44,7 @@ class GraphFragment : Fragment() {
     private lateinit var lineDataSet: BarDataSet
     lateinit var barData: BarData
     private var fragmentGraphBinding: FragmentGraphBinding? = null
+    private lateinit var appDd: AccidentDatabase
 
 //    override fun onCreateView(view: View, savedInstanceState: Bundle?) {
 //        super.onViewCreated(view, savedInstanceState)
@@ -55,6 +59,11 @@ class GraphFragment : Fragment() {
 //        }
 //    }
 
+    private  fun writeData(dataResponse: List<PropertiesX>){
+        GlobalScope.launch(Dispatchers.IO){
+            appDd.accidentDao().insertAll(dataResponse)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,6 +73,7 @@ class GraphFragment : Fragment() {
         binding = FragmentGraphBinding.inflate(layoutInflater)
         fragmentGraphBinding = binding //if the view is already inflated then we can just bind it to view binding.
         val view = binding.root
+        appDd = AccidentDatabase.getDatabase(context)
         barChart = binding.idBarChart
         downloadTask()
         val btn = binding.buttonFetch
@@ -135,7 +145,9 @@ class GraphFragment : Fragment() {
                 //val data = response.toString()
                 //var jArray = JSONArray(data)
                 //val apiData = Gson().fromJson(response, DataResponse::class.java)
+
                 val apiData = Gson().fromJson(response, DataResponse::class.java)
+                val prop = Gson().fromJson(response,Feature::class.java)
                 val features = apiData.features
                 getYearGraph(features)
 
@@ -144,7 +156,10 @@ class GraphFragment : Fragment() {
                 val json = gson.toJson(apiData)
                 prefsEditor.putString("MyObject", json)
                 prefsEditor.apply()
+                writeData(prop.properties)
 
+
+//                appDd = AccidentDatabase.getDatabase(this)
                 //JEN TEST ZDA JE DOBŘE ULOŽENO!
 //                val gsonn = Gson()
 //                val jsonn = mPrefs.getString("MyObject", "")
