@@ -6,9 +6,10 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.bikeaccident.Models.DataResponse
+import com.example.bikeaccident.Models.Feature
 import com.example.bikeaccident.Models.PropertiesX
-
 @Database(entities = [PropertiesX::class], version = 1)
+@TypeConverters(RoomConverters::class)
 abstract class AccidentDatabase: RoomDatabase() {
     abstract fun accidentDao(): AccidentDao
 
@@ -23,7 +24,8 @@ abstract class AccidentDatabase: RoomDatabase() {
                     context,
                     AccidentDatabase::class.java,
                     "nehody_database"
-                ).build()
+                ).allowMainThreadQueries()
+                    .build()
             }
             return INSTANCE!!
         }

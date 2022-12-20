@@ -1,19 +1,16 @@
 package com.example.bikeaccident
 
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.bikeaccident.Models.DataResponse
-import com.example.bikeaccident.Models.Feature
 import com.example.bikeaccident.Models.PropertiesX
 import com.example.bikeaccident.databinding.FragmentGraphBinding
 import com.github.mikephil.charting.charts.BarChart
@@ -24,10 +21,9 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.gson.Gson
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
 
@@ -37,32 +33,20 @@ class GraphFragment : Fragment() {
             "https://data.brno.cz/datasets/mestobrno::cyklistick%C3%A9-nehody-bike-accidents.geojson?outSR=%7B%22latestWkid%22%3A5514%2C%22wkid%22%3A102067%7D"
 
     private lateinit var barList: ArrayList<BarEntry>
-    private lateinit var navController: NavController
     private lateinit var binding: FragmentGraphBinding
-    //lateinit var year: ArrayList<String>
     private lateinit var barChart: BarChart
     private lateinit var lineDataSet: BarDataSet
-    lateinit var barData: BarData
     private var fragmentGraphBinding: FragmentGraphBinding? = null
     private lateinit var appDd: AccidentDatabase
 
-//    override fun onCreateView(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//        binding = FragmentGraphBinding.bind(view)
-//        fragmentGraphBinding = binding //if the view is already inflated then we can just bind it to view binding.
-//
-//        barChart = binding.idBarChart
-//        downloadTask()
-//        val btn = binding.buttonFetch
-//        btn.setOnClickListener {
-//            Navigation.findNavController(view).navigate(R.id.action_graphFragment_to_infoFragment)
-//        }
-//    }
-
-    private  fun writeData(dataResponse: List<PropertiesX>){
+    private  fun writeData(dataResponse: PropertiesX){
         GlobalScope.launch(Dispatchers.IO){
             appDd.accidentDao().insertAll(dataResponse)
         }
+    }
+    //Běží v hlavním vlákně DAO
+    private fun getYear(year: Int) :Int{
+        return appDd.accidentDao().getYear(year)
     }
 
     override fun onCreateView(
@@ -73,14 +57,15 @@ class GraphFragment : Fragment() {
         binding = FragmentGraphBinding.inflate(layoutInflater)
         fragmentGraphBinding = binding //if the view is already inflated then we can just bind it to view binding.
         val view = binding.root
-        appDd = AccidentDatabase.getDatabase(context)
+        appDd = AccidentDatabase.getDatabase(this.requireActivity())
         barChart = binding.idBarChart
         downloadTask()
+        getYearGraph()
+
         val btn = binding.buttonFetch
         btn.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_graphFragment_to_infoFragment)
         }
-//        return inflater.inflate(R.layout.fragment_graph, container,false)
         return view
     }
 
@@ -91,22 +76,20 @@ class GraphFragment : Fragment() {
     }
 
     //Funkce pro vykreslení grafu podle roků
-    private fun getYearGraph(apiData: List<Feature>) {
+    private fun getYearGraph() {
+        val featureList: MutableList<Int> = mutableListOf()
         barList = ArrayList()
         val year = ArrayList<String>()
-        var averageAccident: MutableList<Int> = mutableListOf<Int>()
+        val averageAccident: MutableList<Int> = mutableListOf()
         val yearNow = Calendar.getInstance().get(Calendar.YEAR);
         for ((counter, i) in (2010 until yearNow).withIndex()) {
-            val featureList = apiData.filter {
-                it.properties.rok == i
-            }
-            //println("Rok: " + i + " Počet nehod: " + featureList.size)
-            barList.add(BarEntry(featureList.size.toFloat(), counter))
-            averageAccident.add(featureList.size)
+            featureList.add(getYear(i))
+            println(featureList[counter])
+            barList.add(BarEntry(featureList[counter].toFloat(), counter))
+            averageAccident.add(featureList[counter])
             year.add(i.toString())
         }
         lineDataSet = BarDataSet(barList,"Průměrně nehod: " + averageAccident.average().toInt())
-        //println(averageAccident.average())
         val xAxis: XAxis = barChart.xAxis
         xAxis.textSize = 15f
         xAxis.textColor = Color.BLACK
@@ -134,39 +117,23 @@ class GraphFragment : Fragment() {
     }
 
     private fun downloadTask() {
-        val pref = requireActivity().getPreferences(Context.MODE_PRIVATE)
-//        val mPrefs = this.requireActivity()
-//            .getSharedPreferences("pref", Context.MODE_PRIVATE)
-        //var mPrefs = getPreferences(AppCompatActivity.MODE_PRIVATE)
-        val queue = Volley.newRequestQueue(this.requireActivity())
-        val request = StringRequest(
-            Request.Method.GET, url,
-            { response ->
-                //val data = response.toString()
-                //var jArray = JSONArray(data)
-                //val apiData = Gson().fromJson(response, DataResponse::class.java)
-
-                val apiData = Gson().fromJson(response, DataResponse::class.java)
-                val prop = Gson().fromJson(response,Feature::class.java)
-                val features = apiData.features
-                getYearGraph(features)
-
-                val prefsEditor = pref.edit()
-                val gson = Gson()
-                val json = gson.toJson(apiData)
-                prefsEditor.putString("MyObject", json)
-                prefsEditor.apply()
-                writeData(prop.properties)
-
-
-//                appDd = AccidentDatabase.getDatabase(this)
-                //JEN TEST ZDA JE DOBŘE ULOŽENO!
-//                val gsonn = Gson()
-//                val jsonn = mPrefs.getString("MyObject", "")
-//                val test = gsonn.fromJson(jsonn, DataResponse::class.java)
-//                println(test.features)
-            },
-            { })
-        queue.add(request)
+        if (appDd.accidentDao().exists(1)) {
+            return
+        }
+        else {
+            val queue = Volley.newRequestQueue(this.requireActivity())
+            val request = StringRequest(
+                Request.Method.GET, url,
+                { response ->
+                    val apiData = Gson().fromJson(response, DataResponse::class.java)
+                    //ZÁPIS DO ROOM DATABÁZE
+                    for (i in 0 until apiData.features.size) {
+                        writeData(apiData.features[i].properties)
+                    }
+                    //getYearGraph()
+                },
+                { })
+            queue.add(request)
+        }
     }
 }

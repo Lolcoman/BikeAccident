@@ -3,7 +3,7 @@ package com.example.bikeaccident
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.bikeaccident.Models.DataResponse
+import com.example.bikeaccident.Models.PropertiesX
 
 class FragmentViewModel: ViewModel() {
     private val _accident2 = MutableLiveData<MutableList<Accident>>()
@@ -11,10 +11,11 @@ class FragmentViewModel: ViewModel() {
     val accident2: LiveData<MutableList<Accident>>
         get() = _accident2
 
-    private val statusMessage = MutableLiveData<Event<Boolean>>()
+    var status = MutableLiveData<Boolean?>()
+//    private val statusMessage = MutableLiveData<Event<Boolean>>()
 
-    val message : LiveData<Event<Boolean>>
-        get() = statusMessage
+//    val message : LiveData<Event<Boolean>>
+//        get() = statusMessage
 
     fun <T> MutableLiveData<MutableList<T>>.addNewItem(item: T) {
         val oldValue = this.value ?: mutableListOf()
@@ -38,19 +39,19 @@ class FragmentViewModel: ViewModel() {
         }
     }
 
-    fun searchAccident(rok: Int, alkohol: String, sharedData: DataResponse)
+    fun searchAccident(rok: Int, alkohol: String, props: List<PropertiesX>)
     {
         accident2.value?.clear()
-        var featury = sharedData.features
+        var featury = props
         val featureList = featury.filter {
             try{
-                var alc = String(it.properties.alkohol.toByteArray(charset("ISO-8859-1")),
+                var alc = String(it.alkohol!!.toByteArray(charset("ISO-8859-1")),
                     charset("UTF-8"))
                 when (alc){
-                    "Ne" -> it.properties.rok == rok && alc == alkohol
-                    "Nezjišťován" -> it.properties.rok == rok && alc == alkohol
+                    "Ne" -> it.rok == rok && alc == alkohol
+                    "Nezjišťován" -> it.rok == rok && alc == alkohol
                     else -> {
-                        it.properties.rok == rok && alc.startsWith(alkohol)
+                        it.rok == rok && alc.startsWith(alkohol)
                     }
                 }
             }
@@ -60,13 +61,23 @@ class FragmentViewModel: ViewModel() {
             }
         }
         if (featureList.isEmpty()){
-            statusMessage.value = Event(false)
+            status.value = true
+//            statusMessage.value = Event(false)
             return
         }
         for (item in featureList){
-            _accident2.addNewItem(Accident(item.properties.objectid,item.properties.rok,
-                String(item.properties.alkohol.toByteArray(charset("ISO-8859-1")), charset("UTF-8")),
-                String(item.properties.nazev.toByteArray(charset("ISO-8859-1")), charset("UTF-8"))))
+            if (item.nazev.isNullOrEmpty())
+            {
+                _accident2.addNewItem(Accident(item.objectid!!,item.rok,
+                    String(item.alkohol!!.toByteArray(charset("ISO-8859-1")), charset("UTF-8")),
+                    "Neuvedeno"))
+                return
+            }else{
+            _accident2.addNewItem(Accident(item.objectid!!,item.rok,
+                String(item.alkohol!!.toByteArray(charset("ISO-8859-1")), charset("UTF-8")),
+                String(item.nazev!!.toByteArray(charset("ISO-8859-1")), charset("UTF-8"))))
+            }
         }
+
     }
 }

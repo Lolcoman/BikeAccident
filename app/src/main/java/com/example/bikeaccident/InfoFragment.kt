@@ -1,6 +1,5 @@
 package com.example.bikeaccident
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,6 +14,8 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bikeaccident.Models.DataResponse
+import com.example.bikeaccident.Models.Feature
+import com.example.bikeaccident.Models.PropertiesX
 import com.example.bikeaccident.databinding.FragmentInfoBinding
 import com.google.gson.Gson
 
@@ -22,12 +23,14 @@ import com.google.gson.Gson
 open class InfoFragment : Fragment() {
     private lateinit var binding: FragmentInfoBinding
     private lateinit var viewModel:FragmentViewModel
+    private lateinit var appDd: AccidentDatabase
 
+    private  fun getAllFeatures(): List<PropertiesX>{
+            return appDd.accidentDao().getAll()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val pref = requireActivity().getPreferences(Context.MODE_PRIVATE)
-        val jsonn = pref.getString("MyObject", "")
 
 //        val view = binding.root
 
@@ -48,8 +51,17 @@ open class InfoFragment : Fragment() {
                     it.adapter = AccidentAdapter(accident2)
                 }
         })
-        viewModel.message.observe(viewLifecycleOwner, Observer {
-            it.getContentIfNotHandled()?.let {
+//        viewModel.message.observe(viewLifecycleOwner, Observer {
+//            it.getContentIfNotHandled()?.let {
+//                Toast.makeText(activity?.applicationContext, "Žádné nehody!", Toast.LENGTH_LONG).show()
+//            }
+//        })
+        viewModel.status.observe(viewLifecycleOwner, Observer { status ->
+            status?.let {
+                //Reset status value at first to prevent multitriggering
+                //and to be available to trigger action again
+                viewModel.status.value = null
+                //Display Toast or snackbar
                 Toast.makeText(activity?.applicationContext, "Žádné nehody!", Toast.LENGTH_LONG).show()
             }
         })
@@ -88,19 +100,6 @@ open class InfoFragment : Fragment() {
                 adapter = AccidentAdapter(it)
             }
         })*/
-        val gsonn = Gson()
-        val sharedData = gsonn.fromJson(jsonn, DataResponse::class.java)
-        //Surový list
-        val list: ArrayList<String> = ArrayList()
-        //Převedený líst
-        val decodeList: ArrayList<String> = ArrayList()
-        for (i in 0 until sharedData.features.size ){
-            list.add(sharedData.features[i].properties.pricina)
-        }
-        //Nastavení správného kódování do českého jazyka
-        for (i in 0 until list.size ){
-            decodeList.add(String( list[i].toByteArray(charset("ISO-8859-1")), charset("UTF-8")))
-        }
         binding.searchButton?.setOnClickListener {
             var rokText = binding.editTextYear
             var rok: Int
@@ -125,7 +124,7 @@ open class InfoFragment : Fragment() {
                 layoutManager = LinearLayoutManager(activity?.applicationContext)
                 adapter = null
             }*/
-            viewModel.searchAccident(rok,alc,sharedData)
+            viewModel.searchAccident(rok,alc,getAllFeatures())
 
             /*viewModel.accident2.observe(viewLifecycleOwner, Observer{ accident2 ->
                 recyclerView.also {
@@ -171,6 +170,7 @@ open class InfoFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         viewModel = ViewModelProvider(this)[FragmentViewModel::class.java]
+        appDd = AccidentDatabase.getDatabase(this.requireActivity())
         //val mPrefs : SharedPreferences?= activity?.getPreferences(Context.MODE_PRIVATE);
         binding = FragmentInfoBinding.inflate(layoutInflater,container,false)
         /*val recyclerView: RecyclerView = binding.RecyclerView

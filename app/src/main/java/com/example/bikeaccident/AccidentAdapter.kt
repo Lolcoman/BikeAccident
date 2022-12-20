@@ -29,6 +29,7 @@ class AccidentAdapter(private val accident: MutableList<Accident>) : RecyclerVie
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.setIsRecyclable(false)
         holder.bind(accident[position])
     }
 

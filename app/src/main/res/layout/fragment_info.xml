@@ -196,7 +196,8 @@
                 android:textStyle="bold" />
         </TableRow>
 
-        <androidx.recyclerview.widget.RecyclerView android:id="@+id/RecyclerView" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/RecyclerView" />
     </TableLayout>
 
     <Button
