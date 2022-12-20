@@ -10,41 +10,63 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#99A2D6"
+        android:background="#9CD2AC"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="#000"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/snippet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="10"
-            android:textColor="#000"
-            android:textSize="14sp" />
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
 
-        <ImageButton
-            android:id="@+id/infoWindowButton"
-            style="@style/Widget.AppCompat.ImageButton"
-            android:layout_width="100dp"
-            android:layout_height="35dp"
-            android:layout_gravity="center_horizontal"
-            android:alpha="0.9"
-            android:backgroundTint="#858585"
-            android:clickable="true"
-            android:elevation="30dp"
-            android:scaleType="fitCenter"
-            android:src="@android:drawable/btn_star_big_on" />
+                <TextView
+                    android:paddingRight="5dp"
+                    android:paddingLeft="5dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Komunikace: "
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="#000"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:layout_weight="1"/>
+            </TableRow>
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:paddingRight="5dp"
+                    android:paddingLeft="5dp"
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Informace: "
+                    android:textStyle="bold"/>
+
+
+                <TextView
+                    android:id="@+id/snippet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="10"
+                    android:textColor="#000"
+                    android:textSize="14sp"
+                    android:layout_weight="1"/>
+            </TableRow>
+        </TableLayout>
+
     </LinearLayout>
 
 

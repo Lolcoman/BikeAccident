@@ -136,6 +136,17 @@ open class InfoFragment : Fragment() {
         }
 
         binding.mapShow?.setOnClickListener {
+            val bundle = Bundle()
+            var rokText = binding.editTextYear
+            bundle.putString("rok",rokText?.text.toString())
+            var groupAlkohol = binding.alkoholGroup
+            var alkoholSelected = groupAlkohol!!.checkedRadioButtonId
+            var alkohol = view.findViewById(alkoholSelected) as RadioButton
+            alkohol.text
+            val alc = alkohol.text.toString()
+            bundle.putString("alkohol",alc)
+            val fragment = MapsFragment()
+            fragment.arguments = bundle
 //            findNavController().navigate(binding.navHostFragment.id)
             /*val fragment = MapsFragment()
             val transaction = fragmentManager?.beginTransaction()
@@ -158,7 +169,7 @@ open class InfoFragment : Fragment() {
                 }
             }*/
 
-            Navigation.findNavController(view).navigate(com.example.bikeaccident.R.id.action_infoFragment_to_mapsFragment)
+            Navigation.findNavController(view).navigate(com.example.bikeaccident.R.id.action_infoFragment_to_mapsFragment,bundle)
             /* val fragment2 = MapsFragment()
              val fragmentManager = fragmentManager
              val fragmentTransaction = fragmentManager!!.beginTransaction()

@@ -4,11 +4,14 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.bikeaccident.Models.Geometry
 import com.example.bikeaccident.Models.PropertiesX
 
 
 @Dao
 interface AccidentDao {
+    @Query("SELECT * FROM nehody WHERE rok = :year AND alkohol LIKE '%' || :alc || '%'")
+    fun getPosition(year: Int?,alc: String?): List<PropertiesX>
 
     @Query("SELECT * FROM nehody")
     fun getAll(): List<PropertiesX>

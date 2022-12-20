@@ -59,7 +59,7 @@ class GraphFragment : Fragment() {
         val view = binding.root
         appDd = AccidentDatabase.getDatabase(this.requireActivity())
         barChart = binding.idBarChart
-        downloadTask()
+//        downloadTask()
         getYearGraph()
 
         val btn = binding.buttonFetch
