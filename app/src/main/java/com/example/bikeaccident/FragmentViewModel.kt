@@ -12,10 +12,6 @@ class FragmentViewModel: ViewModel() {
         get() = _accident2
 
     var status = MutableLiveData<Boolean?>()
-//    private val statusMessage = MutableLiveData<Event<Boolean>>()
-
-//    val message : LiveData<Event<Boolean>>
-//        get() = statusMessage
 
     fun <T> MutableLiveData<MutableList<T>>.addNewItem(item: T) {
         val oldValue = this.value ?: mutableListOf()
@@ -78,6 +74,5 @@ class FragmentViewModel: ViewModel() {
                 String(item.nazev!!.toByteArray(charset("ISO-8859-1")), charset("UTF-8"))))
             }
         }
-
     }
 }
