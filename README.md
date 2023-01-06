@@ -1,5 +1,5 @@
 # BikeAccident
-Brno - Aplikace pro přehled cyklistických nehod
+Aplikace pro přehled cyklistických nehod města Brna
 
 # Technologie
 Android 11 app
