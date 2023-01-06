@@ -1,6 +1,5 @@
 package com.example.bikeaccident
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,11 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.bikeaccident.Models.DataResponse
-import com.example.bikeaccident.Models.Feature
 import com.example.bikeaccident.Models.PropertiesX
 import com.example.bikeaccident.databinding.FragmentInfoBinding
-import com.google.gson.Gson
 
 
 open class InfoFragment : Fragment() {

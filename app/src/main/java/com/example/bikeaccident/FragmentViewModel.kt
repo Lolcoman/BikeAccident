@@ -58,7 +58,6 @@ class FragmentViewModel: ViewModel() {
         }
         if (featureList.isEmpty()){
             status.value = true
-//            statusMessage.value = Event(false)
             return
         }
         for (item in featureList){

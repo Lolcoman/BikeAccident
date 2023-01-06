@@ -5,15 +5,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.bikeaccident.Models.DataResponse
 import com.example.bikeaccident.Models.PropertiesX
 import com.google.gson.Gson
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class Splash : AppCompatActivity() {
     private val url = "\t\n" +
@@ -25,7 +24,6 @@ class Splash : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
         appDd = AccidentDatabase.getDatabase(this)
         supportActionBar?.hide()
-
         downloadTask()
 
         val handler = Handler(Looper.getMainLooper())
@@ -33,10 +31,10 @@ class Splash : AppCompatActivity() {
             val intent = Intent(this,MainActivity::class.java)
             startActivity(intent)
             finish()
-        },3000) //3 sekundy
+        },3500) //3,5 sekundy
     }
 
-    private  fun writeData(dataResponse: PropertiesX){
+    private fun writeData(dataResponse: PropertiesX){
         GlobalScope.launch(Dispatchers.IO){
             appDd.accidentDao().insertAll(dataResponse)
         }
@@ -55,7 +53,6 @@ class Splash : AppCompatActivity() {
                     for (i in 0 until apiData.features.size) {
                         writeData(apiData.features[i].properties)
                     }
-                    //getYearGraph()
                 },
                 { })
             queue.add(request)

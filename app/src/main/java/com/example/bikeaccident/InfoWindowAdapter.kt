@@ -1,11 +1,8 @@
 package com.example.bikeaccident
 
-import android.app.Activity
 import android.view.View
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.example.bikeaccident.MapsFragment
-import com.example.bikeaccident.R
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.Marker
 

@@ -5,8 +5,6 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.bikeaccident.Models.DataResponse
-import com.example.bikeaccident.Models.Feature
 import com.example.bikeaccident.Models.PropertiesX
 @Database(entities = [PropertiesX::class], version = 1)
 @TypeConverters(RoomConverters::class)

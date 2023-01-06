@@ -23,7 +23,6 @@ import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.gson.Gson
 import kotlinx.coroutines.*
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
 
@@ -55,22 +54,32 @@ class GraphFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentGraphBinding.inflate(layoutInflater)
-        fragmentGraphBinding = binding //if the view is already inflated then we can just bind it to view binding.
+        fragmentGraphBinding = binding
         val view = binding.root
         appDd = AccidentDatabase.getDatabase(this.requireActivity())
         barChart = binding.idBarChart
-//        downloadTask()
-        getYearGraph()
+
+        //getYearGraph()
 
         val btn = binding.buttonFetch
         btn.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_graphFragment_to_infoFragment)
         }
+        //proběhned vykreslení grafu a pak refresh
+        GlobalScope.launch {
+            suspend {
+                barChart.notifyDataSetChanged();
+                barChart.invalidate();
+                delay(2500)
+                withContext(Dispatchers.Main) {
+                    getYearGraph()
+                }
+            }.invoke()
+        }
         return view
     }
 
     override fun onDestroyView() {
-        // Consider not storing the binding instance in a field, if not needed.
         fragmentGraphBinding = null
         super.onDestroyView()
     }
@@ -130,7 +139,6 @@ class GraphFragment : Fragment() {
                     for (i in 0 until apiData.features.size) {
                         writeData(apiData.features[i].properties)
                     }
-                    //getYearGraph()
                 },
                 { })
             queue.add(request)
