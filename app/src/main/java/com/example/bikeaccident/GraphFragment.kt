@@ -1,6 +1,7 @@
 package com.example.bikeaccident
 
 import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.example.bikeaccident.databinding.FragmentGraphBinding
 import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.charts.Chart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -43,6 +45,9 @@ class GraphFragment : Fragment() {
         val view = binding.root
         appDd = AccidentDatabase.getDatabase(this.requireActivity())
         barChart = binding.idBarChart
+        barChart.setNoDataText("Probíhá načítání dat");
+        val paint: Paint =  barChart.getPaint(Chart.PAINT_INFO)
+        paint.textSize = 60f
 
         //getYearGraph()
 

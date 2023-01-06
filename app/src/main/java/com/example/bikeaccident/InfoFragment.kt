@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bikeaccident.Models.PropertiesX
 import com.example.bikeaccident.databinding.FragmentInfoBinding
+import java.util.*
 
 
 open class InfoFragment : Fragment() {
@@ -43,9 +44,9 @@ open class InfoFragment : Fragment() {
         binding.searchButton?.setOnClickListener {
             var rokText = binding.editTextYear
             var rok: Int
-            if(rokText?.text.toString() == "" || rokText?.text.toString().toInt() < 2010 || rokText?.text.toString().toInt() > 2021)
+            if(rokText?.text.toString() == "" || rokText?.text.toString().toInt() < 2010 || rokText?.text.toString().toInt() > Calendar.getInstance().get(Calendar.YEAR))
             {
-                rokText?.error = "Zadejte rok 2010-2021";
+                rokText?.error = "Zadejte rok 2010-"+ Calendar.getInstance().get(Calendar.YEAR).toString()
                 return@setOnClickListener
             }else{
                 rok = rokText?.text.toString().toInt()
