@@ -7,11 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
-import com.android.volley.Request
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import com.example.bikeaccident.Models.DataResponse
-import com.example.bikeaccident.Models.PropertiesX
 import com.example.bikeaccident.databinding.FragmentGraphBinding
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Legend
@@ -20,17 +15,12 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.utils.ColorTemplate
-import com.google.gson.Gson
 import kotlinx.coroutines.*
 import java.util.*
 import kotlin.math.roundToInt
 
 
 class GraphFragment : Fragment() {
-
-    private val url = "\t\n" +
-            "https://data.brno.cz/datasets/mestobrno::cyklistick%C3%A9-nehody-bike-accidents.geojson?outSR=%7B%22latestWkid%22%3A5514%2C%22wkid%22%3A102067%7D"
-
     private lateinit var barList: ArrayList<BarEntry>
     private lateinit var binding: FragmentGraphBinding
     private lateinit var barChart: BarChart
@@ -38,11 +28,6 @@ class GraphFragment : Fragment() {
     private var fragmentGraphBinding: FragmentGraphBinding? = null
     private lateinit var appDd: AccidentDatabase
 
-    private  fun writeData(dataResponse: PropertiesX){
-        GlobalScope.launch(Dispatchers.IO){
-            appDd.accidentDao().insertAll(dataResponse)
-        }
-    }
     //Běží v hlavním vlákně DAO
     private fun getYear(year: Int) :Int{
         return appDd.accidentDao().getYear(year)
@@ -68,8 +53,8 @@ class GraphFragment : Fragment() {
         //proběhned vykreslení grafu a pak refresh
         GlobalScope.launch {
             suspend {
-                barChart.notifyDataSetChanged();
-                barChart.invalidate();
+                barChart.notifyDataSetChanged()
+                barChart.invalidate()
                 delay(2500)
                 withContext(Dispatchers.Main) {
                     getYearGraph()
@@ -90,7 +75,7 @@ class GraphFragment : Fragment() {
         barList = ArrayList()
         val year = ArrayList<String>()
         val averageAccident: MutableList<Int> = mutableListOf()
-        val yearNow = Calendar.getInstance().get(Calendar.YEAR);
+        val yearNow = Calendar.getInstance().get(Calendar.YEAR)
         for ((counter, i) in (2010 until yearNow).withIndex()) {
             featureList.add(getYear(i))
             println(featureList[counter])
@@ -123,25 +108,5 @@ class GraphFragment : Fragment() {
         lineDataSet.valueTextColor = Color.BLACK
         lineDataSet.valueTextSize = 15f
         //barChart.setScaleEnabled(false)
-    }
-
-    private fun downloadTask() {
-        if (appDd.accidentDao().exists(1)) {
-            return
-        }
-        else {
-            val queue = Volley.newRequestQueue(this.requireActivity())
-            val request = StringRequest(
-                Request.Method.GET, url,
-                { response ->
-                    val apiData = Gson().fromJson(response, DataResponse::class.java)
-                    //ZÁPIS DO ROOM DATABÁZE
-                    for (i in 0 until apiData.features.size) {
-                        writeData(apiData.features[i].properties)
-                    }
-                },
-                { })
-            queue.add(request)
-        }
     }
 }
